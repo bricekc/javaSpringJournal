@@ -11,6 +11,4 @@ import com.api.journal.entity.Utilisateur;
 public interface UserRepository extends JpaRepository<Utilisateur, Long> {
 
     List<Utilisateur> findByUsername(String username);
-
-    Iterable<Utilisateur> findByJournalId(Long journalId);
 }

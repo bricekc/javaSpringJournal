@@ -40,9 +40,4 @@ public class UserController {
     public void deleteUser(Long id) {
         userService.deleteUser(id);
     }
-
-    @GetMapping(value = "/journal/{journalId}/user")
-    public Iterable<Utilisateur> getUsersByJournalId(Long journalId) {
-        return userService.getUsersByJournalId(journalId);
-    }
 }

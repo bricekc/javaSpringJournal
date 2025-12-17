@@ -36,8 +36,4 @@ public class UserService {
             userRepository.save(existingUser);
         }
     }
-
-    public Iterable<Utilisateur> getUsersByJournalId(Long journalId) {
-        return userRepository.findByJournalId(journalId);
-    }
 }
