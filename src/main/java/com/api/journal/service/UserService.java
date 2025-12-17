@@ -1,10 +1,12 @@
 package com.api.journal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.api.journal.entity.Utilisateur;
 import com.api.journal.repository.UserRepository;
 
+@Service
 public class UserService {
 
     @Autowired

@@ -1,10 +1,14 @@
 package com.api.journal.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.api.journal.entity.Journal;
 import com.api.journal.repository.JournalRepository;
 
+@Service
 public class JournalService {
 
     @Autowired
@@ -34,5 +38,9 @@ public class JournalService {
             existingJournal.setAuthor(updatedJournal.getAuthor());
             journalRepository.save(existingJournal);
         }
+    }
+
+    public List<Journal> getJournalsByUtilisateurId(Long utilisateurId) {
+        return journalRepository.findByUtilisateurId(utilisateurId);
     }
 }

@@ -1,9 +1,12 @@
 package com.api.journal.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Utilisateur {
@@ -14,6 +17,9 @@ public class Utilisateur {
 
     private String username;
     private String password;
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Journal> journals;
 
     public Utilisateur() {
     }
