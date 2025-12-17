@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - main
+      - develop
 
 jobs:
   build-and-test:
@@ -29,7 +30,7 @@ jobs:
         run: mvn clean verify
 
   docker-build-and-push:
-    if: github.ref == 'refs/heads/main'
+    #if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     needs: build-and-test
     runs-on: ubuntu-latest
 
@@ -54,3 +55,40 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/javaspringjournal:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/javaspringjournal:${{ github.sha }}
+
+  terraform-deploy:
+    #if: github.ref == 'refs/heads/main'
+    needs: docker-build-and-push
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create SSH key file
+        run: |
+          mkdir -p terraform
+          echo "${{ secrets.SSH_KEY }}" > terraform/terraform-key.pem
+          chmod 600 terraform/terraform-key.pem
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: |
+          cd terraform
+          terraform init
+
+      - name: Terraform Plan
+        run: |
+          cd terraform
+          terraform plan
+
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          terraform apply -auto-approve
