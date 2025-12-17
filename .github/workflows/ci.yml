@@ -92,3 +92,28 @@ jobs:
         run: |
           cd terraform
           terraform apply -auto-approve
+
+  deploy-and-configure:
+    if: github.ref == 'refs/heads/main'
+    needs: docker-build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ansible
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook -i "${{ secrets.DEPLOY_HOST }}," -u ${{ secrets.DEPLOY_USER }} playbooks/configure.yml
