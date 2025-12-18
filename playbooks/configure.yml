@@ -13,17 +13,11 @@
   tasks:
 
     - name: Update package cache (Amazon Linux)
-      yum:
-        update_cache: yes
+      ansible.builtin.command: sudo yum makecache
       when: ansible_facts['os_family'] == 'RedHat'
 
     - name: Install required packages (Amazon Linux)
-      yum:
-        name:
-          - curl
-          - docker
-          - docker-compose
-        state: present
+      ansible.builtin.command: sudo yum install -y curl docker docker-compose
       when: ansible_facts['os_family'] == 'RedHat'
 
     - name: Update package cache (Debian/Ubuntu)
