@@ -109,11 +109,11 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Install Ansible 2.17
+      - name: Install Ansible 2.16
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip
-          pip3 install ansible==2.17.*
+          pip3 install ansible==2.16.*
 
       - name: Show Ansible version
         run: ansible --version
