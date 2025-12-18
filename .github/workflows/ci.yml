@@ -57,7 +57,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/javaspringjournal:${{ github.sha }}
 
   terraform-deploy:
-    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.modified, 'terraform/')
+    if: github.ref == 'refs/heads/main'
     needs: docker-build-and-push
     runs-on: ubuntu-latest
 
@@ -68,27 +68,43 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check terraform changes
+        id: check-terraform
+        run: |
+          if git diff --quiet origin/main...HEAD -- terraform/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create SSH key file
+        if: steps.check-terraform.outputs.changed == 'true'
         run: |
           mkdir -p terraform
           echo "${{ secrets.SSH_KEY }}" > terraform/terraform-key.pem
           chmod 600 terraform/terraform-key.pem
 
       - name: Set up Terraform
+        if: steps.check-terraform.outputs.changed == 'true'
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        if: steps.check-terraform.outputs.changed == 'true'
         run: |
           cd terraform
           terraform init
 
       - name: Terraform Plan
+        if: steps.check-terraform.outputs.changed == 'true'
         run: |
           cd terraform
           terraform plan
 
       - name: Terraform Apply
+        if: steps.check-terraform.outputs.changed == 'true'
         run: |
           cd terraform
           terraform apply -auto-approve
