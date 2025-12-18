@@ -11,16 +11,15 @@
     spring_jpa_show_sql: "true"
 
   tasks:
-    - name: Update apt cache
-      apt:
+    - name: Update package cache
+      package:
         update_cache: yes
-        cache_valid_time: 3600
 
     - name: Install required packages
-      apt:
+      package:
         name:
           - curl
-          - docker.io
+          - docker
           - docker-compose
         state: present
 
