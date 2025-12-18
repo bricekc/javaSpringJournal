@@ -18,7 +18,7 @@
       become: yes
 
     - name: Update python3 alternative to 3.12
-      update_alternatives:
+      community.general.alternatives:
         name: python3
         path: /usr/bin/python3.12
       become: yes
