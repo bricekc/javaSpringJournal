@@ -122,11 +122,6 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cat /etc/os-release"
 
-      - name: Upgrade Python to 3.12
-        run: |
-          sudo yum install -y python3.12
-          sudo alternatives --set python3 /usr/bin/python3.12
-
       - name: Check Python version on target
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "python3 --version || python --version || echo 'Python not found'"
