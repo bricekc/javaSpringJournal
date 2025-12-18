@@ -11,18 +11,6 @@
     spring_jpa_show_sql: "true"
 
   tasks:
-    # - name: Install Python 3.12
-    #   apt:
-    #     name: python3.12
-    #     state: present
-    #   become: yes
-
-    # - name: Update python3 alternative to 3.12
-    #   community.general.alternatives:
-    #     name: python3
-    #     path: /usr/bin/python3.12
-    #   become: yes
-
     - name: Update apt cache
       apt:
         update_cache: yes
