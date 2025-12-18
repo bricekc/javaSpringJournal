@@ -95,10 +95,23 @@ jobs:
 
   deploy-and-configure:
     # if: github.ref == 'refs/heads/main'
-    needs: [docker-build-and-push, terraform-deploy]
+    needs: docker-build-and-push
     runs-on: ubuntu-latest
 
     steps:
+      - name: Wait for terraform-deploy (if terraform/ modifié)
+        if: contains(github.event.head_commit.modified, 'terraform/')
+        run: |
+          for i in {1..30}; do
+            if [ -f terraform/terraform.lock ]; then
+              echo "Terraform deploy finished."
+              break
+            fi
+            echo "Waiting for terraform-deploy to finish... ($i)"
+            sleep 10
+          done
+        continue-on-error: true
+
       - name: Checkout code
         uses: actions/checkout@v4
 
