@@ -11,17 +11,34 @@
     spring_jpa_show_sql: "true"
 
   tasks:
-    - name: Update package cache
-      ansible.builtin.package:
-        update_cache: yes
 
-    - name: Install required packages
-      ansible.builtin.package:
+    - name: Update package cache (Amazon Linux)
+      yum:
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Install required packages (Amazon Linux)
+      yum:
         name:
           - curl
           - docker
           - docker-compose
         state: present
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Update package cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install required packages (Debian/Ubuntu)
+      apt:
+        name:
+          - curl
+          - docker.io
+          - docker-compose
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
 
     - name: Start Docker service
       systemd:
