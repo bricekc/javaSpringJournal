@@ -83,7 +83,7 @@
 
     - name: Wait for application to be ready
       uri:
-        url: "http://localhost:8080/actuator/health"
+        url: "http://localhost:8080/health"
         status_code: 200
       register: result
       until: result.status == 200
