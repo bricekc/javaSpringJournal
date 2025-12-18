@@ -3,8 +3,10 @@ package com.api.journal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.api.journal.entity.Journal;
@@ -32,27 +34,27 @@ public class JournalController {
   }
 
   @GetMapping("/journals/{id}")
-  public Journal getJournalById(Long id) {
+  public Journal getJournalById(@PathVariable Long id) {
     return journalService.getJournalById(id);
   }
 
   @PostMapping("/journals")
-  public Journal createJournal(Journal journal) {
+  public Journal createJournal(@RequestBody Journal journal) {
     return journalService.createJournal(journal);
   }
 
   @DeleteMapping("/journals/{id}")
-  public void deleteJournal(Long id) {
+  public void deleteJournal(@PathVariable Long id) {
     journalService.deleteJournal(id);
   }
 
   @PutMapping("/journals/{id}")
-  public void updateJournal(Long id, Journal updatedJournal) {
+  public void updateJournal(@PathVariable Long id, @RequestBody Journal updatedJournal) {
     journalService.updateJournal(id, updatedJournal);
   }
 
   @GetMapping("/utilisateurs/{utilisateurId}/journals")
-  public Iterable<Journal> getJournalsByUtilisateurId(Long utilisateurId) {
+  public Iterable<Journal> getJournalsByUtilisateurId(@PathVariable Long utilisateurId) {
     return journalService.getJournalsByUtilisateurId(utilisateurId);
   }
 }
