@@ -1,0 +1,91 @@
+---
+- name: Configure server and deploy with Docker Compose
+  hosts: all
+  become: yes
+  vars:
+    app_dir: /opt/javaspringjournal
+    spring_datasource_url: "jdbc:postgresql://postgres:5432/journaldb"
+    spring_datasource_username: "journal"
+    spring_datasource_password: "journal"
+    spring_jpa_ddl_auto: "update"
+    spring_jpa_show_sql: "true"
+
+  tasks:
+
+    - name: Update package cache (Amazon Linux)
+      ansible.builtin.command: sudo yum makecache
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Install required packages (Amazon Linux)
+      ansible.builtin.command: sudo yum install -y curl docker docker-compose
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Install python3-pip and requests (Amazon Linux)
+      ansible.builtin.command: sudo yum install -y python3-pip && pip3 install requests
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Install Docker Compose v2 plugin (Amazon Linux)
+      ansible.builtin.shell: |
+        mkdir -p ~/.docker/cli-plugins/
+        curl -SL https://github.com/docker/compose/releases/download/v2.27.1/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+        chmod +x ~/.docker/cli-plugins/docker-compose
+      when: ansible_facts['os_family'] == 'RedHat'
+
+    - name: Update package cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Install required packages (Debian/Ubuntu)
+      apt:
+        name:
+          - curl
+          - docker.io
+          - docker-compose
+        state: present
+      when: ansible_facts['os_family'] == 'Debian'
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy docker-compose template to server
+      template:
+        src: docker-compose.yml.j2
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: '0644'
+
+    - name: Pull latest Docker images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - postgres:16
+        - bricekc/javaspringjournal:latest
+      ignore_errors: yes
+
+    - name: Run docker-compose up
+      community.docker.docker_compose_v2:
+        project_src: "{{ app_dir }}"
+      register: output
+
+    - name: Display docker-compose output
+      debug:
+        var: output
+
+    - name: Wait for application to be ready
+      uri:
+        url: "http://localhost:8080/health"
+        status_code: 200
+      register: result
+      until: result.status == 200
+      retries: 10
+      delay: 10

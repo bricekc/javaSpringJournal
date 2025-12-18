@@ -92,7 +92,7 @@ resource "aws_instance" "public_vm" {
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = true
-  security_groups             = [aws_security_group.web_sg.id]
+  vpc_security_group_ids      = [aws_security_group.web_sg.id]
   key_name                    = "terraform-key"
   tags                        = { Name = "public-instance-demo" }
 }
