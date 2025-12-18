@@ -52,10 +52,8 @@
       ignore_errors: yes
 
     - name: Run docker-compose up
-      docker_compose:
+      community.docker.docker_compose_v2:
         project_src: "{{ app_dir }}"
-        state: present
-        recreate: smart
       register: output
 
     - name: Display docker-compose output
