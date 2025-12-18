@@ -114,6 +114,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ansible
 
+      - name: Show Ansible version
+        run: ansible --version
+
       - name: Check Python version on target
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "python3 --version || python --version || echo 'Python not found'"
