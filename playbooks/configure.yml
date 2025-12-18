@@ -12,11 +12,11 @@
 
   tasks:
     - name: Update package cache
-      package:
+      ansible.builtin.package:
         update_cache: yes
 
     - name: Install required packages
-      package:
+      ansible.builtin.package:
         name:
           - curl
           - docker
