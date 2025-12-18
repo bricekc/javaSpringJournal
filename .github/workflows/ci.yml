@@ -30,7 +30,7 @@ jobs:
         run: mvn clean verify
 
   docker-build-and-push:
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    # if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     needs: build-and-test
     runs-on: ubuntu-latest
 
@@ -95,7 +95,7 @@ jobs:
 
   deploy-and-configure:
     # if: github.ref == 'refs/heads/main'
-    # needs: docker-build-and-push
+    needs: docker-build-and-push
     runs-on: ubuntu-latest
 
     steps:
