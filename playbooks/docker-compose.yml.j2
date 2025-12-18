@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:16
     restart: always
+    pull_policy: always
     environment:
       POSTGRES_DB: journaldb
       POSTGRES_USER: journal
@@ -14,6 +15,7 @@ services:
   app:
     image: bricekc/javaspringjournal:latest
     restart: always
+    pull_policy: always
     depends_on:
       - postgres
     ports:
