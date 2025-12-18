@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### terraform ###
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+*.tfvars
+*.tfvars.json
+
+*.tfplan
+.terraform.lock.hcl
