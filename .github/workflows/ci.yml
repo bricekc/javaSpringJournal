@@ -94,8 +94,8 @@ jobs:
           terraform apply -auto-approve
 
   deploy-and-configure:
-    if: github.ref == 'refs/heads/main'
-    needs: docker-build-and-push
+    # if: github.ref == 'refs/heads/main'
+    needs: terraform-deploy
     runs-on: ubuntu-latest
 
     steps:
