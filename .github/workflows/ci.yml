@@ -57,7 +57,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/javaspringjournal:${{ github.sha }}
 
   terraform-deploy:
-    #if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.modified, 'terraform/')
     needs: docker-build-and-push
     runs-on: ubuntu-latest
 
