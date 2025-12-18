@@ -117,6 +117,10 @@ jobs:
       - name: Show Ansible version
         run: ansible --version
 
+      - name: Get os informations
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "cat /etc/os-release"
+
       - name: Upgrade Python to 3.12
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} '
