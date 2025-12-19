@@ -26,7 +26,4 @@ public class controllerTest {
         String response = restTemplate.getForObject("/", String.class);
         assertThat(response).isEqualTo("Bienvenue sur l'API Journal!");
     }
-
-    // Add more functional tests if needed, but since it's integration, might need
-    // to set up data
 }

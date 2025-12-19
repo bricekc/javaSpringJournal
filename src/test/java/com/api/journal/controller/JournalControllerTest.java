@@ -52,7 +52,6 @@ public class JournalControllerTest {
 
         mockMvc.perform(get("/journals"))
                 .andExpect(status().isOk());
-        // Add more assertions if needed, like JSON content
     }
 
     @Test
@@ -75,7 +74,7 @@ public class JournalControllerTest {
 
         mockMvc.perform(post("/journals")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1}")) // Adjust JSON as per entity
+                .content("{\"id\":1}"))
                 .andExpect(status().isOk());
     }
 
